@@ -22,7 +22,7 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 import org.springframework.web.filter.OncePerRequestFilter
-import software.samios.api.admin.staff.UserDetailsImpl
+import software.samios.api.user.UserDetailsImpl
 import software.samios.api.utility.EnvLoader
 
 @Configuration
@@ -50,7 +50,7 @@ class AuthConfig {
             .authorizeHttpRequests { authorize ->
                 authorize.requestMatchers(AntPathRequestMatcher("/auth/**")).permitAll()
                 authorize.requestMatchers(AntPathRequestMatcher("/api/**")).permitAll()
-                authorize.requestMatchers(AntPathRequestMatcher("/api/admin/**")).authenticated()
+                authorize.requestMatchers(AntPathRequestMatcher("/api/admin/**")).hasAuthority("STAFF")
             }
             .addFilterBefore(AuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
@@ -63,7 +63,7 @@ class AuthConfig {
 
     @Bean
     fun userDetailsService(): UserDetailsService {
-        return UserDetailsService { UserDetailsImpl(null) }
+        return UserDetailsService { UserDetailsImpl(null, listOf()) }
     }
 
     /**

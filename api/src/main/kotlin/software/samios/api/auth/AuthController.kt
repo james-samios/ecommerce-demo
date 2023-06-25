@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import software.samios.api.user.AccountType
 
 @RestController
 @RequestMapping("/auth")
@@ -20,13 +21,22 @@ class AuthController(
      * Authenticate a user via a POST request.
      * @param email The user's email address.
      * @param password The user's password in plaintext.
+     * @param type The type of user to authenticate, whether it is a customer or staff member.
      * @return A response entity containing a token if the user is authenticated, or an error message if not.
      */
     @PostMapping("/login")
-    fun login(@RequestParam email: String, @RequestParam password: String): ResponseEntity<out Any> {
-        val user = authService.authenticate(email, password)
+    fun login(
+        @RequestParam email: String,
+        @RequestParam password: String,
+        @RequestParam type: AccountType
+    ): ResponseEntity<out Any> {
+        val user = if (type == AccountType.CUSTOMER) {
+            authService.authenticateCustomerAccount(email, password)
+        } else {
+            authService.authenticateStaffAccount(email, password)
+        }
         return if (user != null) {
-            val token = tokenProvider.generateToken(user.email)
+            val token = tokenProvider.generateToken(user)
             redisTemplate.opsForValue().set("token:$token", user) // Insert token and user into Redis
             ResponseEntity.ok(mapOf(
                 "token" to token,
@@ -38,8 +48,7 @@ class AuthController(
     }
 
     /**
-     * Log out an admin user via a GET request.
-     *
+     * Log out a user via a GET request.
      */
     @GetMapping("/logout")
     fun logout(request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<Any> {

@@ -50,7 +50,7 @@ To get started with the project, follow the instructions below:
 2. Setup environment variables as per .env.example for both the API and Frontend, ensuring that you have live MongoDB
 and Redis servers running.
 3. The Spring Backend can be run locally by starting the main function in ECommerceAPI.kt. Alternatively, the backend
-   can be run in a Docker container by running `docker-compose up` in the root directory.
+   can be run in a Docker container by running `docker-compose up` in the api directory.
 4. The React Frontend can be run locally by running `npm run start` in the frontend directory.
 
 ## Features

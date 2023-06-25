@@ -1,18 +1,19 @@
-package software.samios.api.admin.staff
+package software.samios.api.user
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 class UserDetailsImpl(
-    private val user: StaffAccount?,
+    private val user: UserAccount?,
+    private val authorities: List<GrantedAuthority>
 ) : UserDetails {
 
     override fun getUsername(): String {
-        return user?.email ?: ""
+        return user?.userEmail ?: ""
     }
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
-        return listOf()
+        return authorities
     }
 
     override fun getPassword(): String? {
@@ -32,6 +33,6 @@ class UserDetailsImpl(
     }
 
     override fun isEnabled(): Boolean {
-        return user?.emailVerified ?: false
+        return user?.userAccountActive ?: false
     }
 }

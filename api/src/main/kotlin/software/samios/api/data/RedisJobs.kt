@@ -35,7 +35,7 @@ class RedisJobs(
                 val tokenKeys = redisTemplate.keys("token:*")
 
                 tokenKeys.forEach { tokenKey ->
-                    if (!tokenProvider.validateToken(tokenKey)) {
+                    if (!tokenProvider.validateToken(tokenKey.replace("token:", ""))) {
                         redisTemplate.delete(tokenKey)
                     }
                 }
