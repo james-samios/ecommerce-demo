@@ -51,7 +51,17 @@ class TokenProvider(
         val secretKey = getSecretKey()
         val expirationDate = Date(Date().time + TimeUnit.HOURS.toMillis(12))
 
-        val roles = listOf(account.accountType.name)
+        val roles = mutableListOf<String>()
+
+        // We have to do this first for the custom SpEL expression to work
+        if (account.accountType == AccountType.STAFF) {
+            val staffAccount = staffAccountRepository.findByEmail(account.userEmail)
+            if (staffAccount != null) {
+                roles.add(staffAccount.access.name)
+            }
+        }
+
+        roles.add(account.accountType.name)
 
         return Jwts.builder()
             .setSubject(account.userEmail)
@@ -74,7 +84,8 @@ class TokenProvider(
     private fun getTokenType(token: String, accountType: AccountType): Boolean {
         return try {
             val claims = extractClaims(token)
-            claims.audience == accountType.name
+            val roles = claims["roles"] as List<*>
+            return roles.contains(accountType.name)
         } catch (ex: Exception) {
             false
         }

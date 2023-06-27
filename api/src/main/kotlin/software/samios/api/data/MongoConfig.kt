@@ -10,7 +10,7 @@ import software.samios.api.utility.EnvLoader
 
 /**
  * MongoDB Cloud Configuration
- * If you are using a local MongoDB instance, you will need to add in the port number to the connection string.
+ * If you are using a local MongoDB instance, uncomment the lines below.
  */
 @Configuration
 class MongoConfig : AbstractMongoClientConfiguration() {
@@ -19,8 +19,10 @@ class MongoConfig : AbstractMongoClientConfiguration() {
         val host = EnvLoader.getEnvVariable("MONGODB_HOST") ?: "localhost"
         val username = EnvLoader.getEnvVariable("MONGODB_USERNAME")
         val password = EnvLoader.getEnvVariable("MONGODB_PASSWORD")
+        // val port = EnvLoader.getEnvVariable("MONGODB_PORT") ?: "27017" // local port
 
-        val connectionString = "mongodb+srv://$username:$password@$host/${databaseName}?retryWrites=true&w=majority"
+        // val connectionString = "mongodb:$host:$port/$databaseName // local connection string
+        val connectionString = "mongodb+srv://$username:$password@$host/$databaseName?retryWrites=true&w=majority"
         val clientSettings = MongoClientSettings.builder()
             .applyConnectionString(ConnectionString(connectionString))
             .build()

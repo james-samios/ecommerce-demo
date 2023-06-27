@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -22,11 +23,13 @@ import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 import org.springframework.web.filter.OncePerRequestFilter
+import software.samios.api.user.AccountType
 import software.samios.api.user.UserDetailsImpl
 import software.samios.api.utility.EnvLoader
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 class AuthConfig {
 
     @Autowired
@@ -48,9 +51,10 @@ class AuthConfig {
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { it.disable() }.cors { it.disable() } // This is not removing CSRF or CORS, it is just refreshing the config!
             .authorizeHttpRequests { authorize ->
+                authorize.requestMatchers(AntPathRequestMatcher("/photos/**")).permitAll()
                 authorize.requestMatchers(AntPathRequestMatcher("/auth/**")).permitAll()
                 authorize.requestMatchers(AntPathRequestMatcher("/api/**")).permitAll()
-                authorize.requestMatchers(AntPathRequestMatcher("/api/admin/**")).hasAuthority("STAFF")
+                authorize.requestMatchers(AntPathRequestMatcher("/api/admin/**")).hasAuthority(AccountType.STAFF.name)
             }
             .addFilterBefore(AuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
