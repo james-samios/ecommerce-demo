@@ -1,6 +1,7 @@
 package software.samios.api.data
 
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import software.samios.api.auth.TokenProvider
@@ -8,6 +9,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Component
+@EnableScheduling
 class RedisJobs(
     private val redisTemplate: RedisTemplate<String, Any>,
     private val tokenProvider: TokenProvider
@@ -23,7 +25,7 @@ class RedisJobs(
      * It is important to understand that with multiple nodes setup, this method can run at any given time.
      * Although that should be fine, as it is only deleting invalid tokens.
      */
-    @Scheduled(initialDelay = 0, fixedDelay = 2 * 60 * 60 * 1000) // Run every 2 hours
+    @Scheduled(fixedRate = 2 * 60 * 60 * 1000) // Run every 2 hours
     fun cleanupExpiredTokens() {
         val lockKey = "tokenCleanUpLock"
         val lockValue = UUID.randomUUID().toString()

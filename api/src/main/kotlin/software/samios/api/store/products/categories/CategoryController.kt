@@ -17,7 +17,7 @@ class CategoryController(
 ) {
 
     companion object {
-        const val categoryTreeCacheKey = "category_tree"
+        const val categoryTreeCacheKey = "categories"
     }
 
     @GetMapping

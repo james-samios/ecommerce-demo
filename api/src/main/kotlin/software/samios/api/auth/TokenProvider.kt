@@ -28,7 +28,7 @@ class TokenProvider(
     private val customerAccountRepository: CustomerAccountRepository
 ) {
 
-    private val secretKeyRedisKey = "jwt:secret_key"
+    private val secretKeyRedisKey = "jwt:secretKey"
 
     private fun getSecretKey(): String {
         var secretKey = redisTemplate.opsForValue().get(secretKeyRedisKey) as? String

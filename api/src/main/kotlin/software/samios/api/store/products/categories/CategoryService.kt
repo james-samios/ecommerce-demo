@@ -9,7 +9,7 @@ import java.nio.file.Paths
 class CategoryService(private val categoryRepository: CategoryRepository) {
 
     fun saveCategoryWithImage(category: Category, file: MultipartFile) {
-        val directoryPath = Paths.get("/photos/${category.id}").toString()
+        val directoryPath = Paths.get("/photos/category/${category.id}").toString()
         val directory = File(directoryPath)
 
         if (!directory.exists()) {

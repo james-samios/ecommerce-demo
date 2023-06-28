@@ -21,7 +21,7 @@ class MongoConfig : AbstractMongoClientConfiguration() {
         val password = EnvLoader.getEnvVariable("MONGODB_PASSWORD")
         // val port = EnvLoader.getEnvVariable("MONGODB_PORT") ?: "27017" // local port
 
-        // val connectionString = "mongodb:$host:$port/$databaseName // local connection string
+        // val connectionString = "mongodb://$host:$port/$databaseName // local connection string
         val connectionString = "mongodb+srv://$username:$password@$host/$databaseName?retryWrites=true&w=majority"
         val clientSettings = MongoClientSettings.builder()
             .applyConnectionString(ConnectionString(connectionString))

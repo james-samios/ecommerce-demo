@@ -3,22 +3,21 @@ package software.samios.api.user
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 
-@Document(collection = "staff_accounts")
+@Document(collection = "staffAccounts")
 data class StaffAccount(
     @Id val id: String,
-    @Field("first_name") val firstName: String,
-    @Field("last_name") val lastName: String,
-    @Field("email") val email: String,
-    @Field("email_verified") val emailVerified: Boolean = false,
-    @Field("password") @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val password: String,
-    @Field("access") val access: StaffAccess = StaffAccess.GUEST,
-    @Field("last_login") val lastLogin: Long = System.currentTimeMillis(),
-    @Field("ip_address") val ipAddress: String = "",
-    @Field("account_active") val accountActive: Boolean = false
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val emailVerified: Boolean = false,
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val password: String,
+    val access: StaffAccess = StaffAccess.GUEST,
+    val lastLogin: Long = System.currentTimeMillis(),
+    val ipAddress: String = "",
+    val accountActive: Boolean = false
 
 ): UserAccount(
     userEmail = email,
