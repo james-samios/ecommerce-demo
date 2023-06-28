@@ -9,7 +9,7 @@ data class Category(
 
     @Id
     var id: String? = null,
-    var name: String,
+    var name: String? = null,
     var parentId: String? = null,
     var imagePath: String? = null
 ) {
