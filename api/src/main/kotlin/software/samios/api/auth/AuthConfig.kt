@@ -55,6 +55,7 @@ class AuthConfig {
                 authorize.requestMatchers(AntPathRequestMatcher("/auth/**")).permitAll()
                 authorize.requestMatchers(AntPathRequestMatcher("/api/**")).permitAll()
                 authorize.requestMatchers(AntPathRequestMatcher("/api/admin/**")).hasAuthority(AccountType.STAFF.name)
+                authorize.requestMatchers(AntPathRequestMatcher("/api/customer/**")).hasAuthority(AccountType.CUSTOMER.name)
             }
             .addFilterBefore(AuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()

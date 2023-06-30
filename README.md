@@ -64,7 +64,7 @@ The Spring backend provides the following features:
 - [x] Middle-man between frontend and databases (MongoDB and Redis).
 - [x] REST API for the frontend to manage products, orders, and users.
 - [x] Authentication for the admin portal via tokens.
-- [ ] Photo storage volume implementation for products.
+- [x] Photo storage volume implementation for products.
 - [ ] Payment processing via Stripe.
 - [ ] Email integration with AWS SES.
 - [ ] WebSocket integration for real-time updates such as order status.

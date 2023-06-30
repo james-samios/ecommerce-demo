@@ -1,8 +1,10 @@
 package software.samios.api.user
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
+import software.samios.api.store.customers.Address
 
 @Document(collection = "customerAccounts")
 data class CustomerAccount(
@@ -11,12 +13,14 @@ data class CustomerAccount(
     val lastName: String,
     val email: String,
     val emailVerified: Boolean = false,
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val password: String,
+    @JsonIgnore @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val password: String,
     val joinDate: Long = System.currentTimeMillis(),
     val lastLogin: Long = System.currentTimeMillis(),
     val ipAddress: String = "",
-    val accountActive: Boolean = false,
-    // todo: add shipping addresses and payment methods
+    @JsonIgnore val accountActive: Boolean = false,
+    @JsonIgnore val shippingAddress: Address? = null,
+    @JsonIgnore val billingAddress: Address? = null
+    // todo: add payment methods
 
 ): UserAccount(
     userEmail = email,

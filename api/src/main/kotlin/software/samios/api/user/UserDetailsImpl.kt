@@ -8,6 +8,18 @@ class UserDetailsImpl(
     private val authorities: List<GrantedAuthority>
 ) : UserDetails {
 
+    fun getUser(): UserAccount? {
+        return user
+    }
+
+    fun getCustomer(): CustomerAccount? {
+        return user as? CustomerAccount
+    }
+
+    fun getStaff(): StaffAccount? {
+        return user as? StaffAccount
+    }
+
     override fun getUsername(): String {
         return user?.userEmail ?: ""
     }

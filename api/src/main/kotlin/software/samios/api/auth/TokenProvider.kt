@@ -63,13 +63,16 @@ class TokenProvider(
 
         roles.add(account.accountType.name)
 
-        return Jwts.builder()
+        val token = Jwts.builder()
             .setSubject(account.userEmail)
             .claim("roles", roles)
             .setIssuedAt(Date())
             .setExpiration(expirationDate)
             .signWith(SignatureAlgorithm.HS256, secretKey)
             .compact()
+
+        redisTemplate.opsForValue().set("token:$token", account) // Insert token and user into Redis
+        return token
     }
 
     fun validateToken(token: String): Boolean {
@@ -107,9 +110,8 @@ class TokenProvider(
     }
 
     private fun extractClaims(token: String): Claims {
-        val secretKey = redisTemplate.opsForValue().get(secretKeyRedisKey) as String
         return Jwts.parser()
-            .setSigningKey(secretKey)
+            .setSigningKey(getSecretKey())
             .parseClaimsJws(token)
             .body
     }

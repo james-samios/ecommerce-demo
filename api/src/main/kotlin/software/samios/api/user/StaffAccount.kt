@@ -1,5 +1,6 @@
 package software.samios.api.user
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
@@ -13,7 +14,7 @@ data class StaffAccount(
     val lastName: String,
     val email: String,
     val emailVerified: Boolean = false,
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val password: String,
+    @JsonIgnore @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val password: String,
     val access: StaffAccess = StaffAccess.GUEST,
     val lastLogin: Long = System.currentTimeMillis(),
     val ipAddress: String = "",
@@ -41,6 +42,10 @@ enum class StaffAccess {
 class StaffAccountAuth {
     fun hasRole(auth: Authentication, role: StaffAccess): Boolean {
         val firstRole = auth.authorities.firstOrNull()?.authority
-        return firstRole != null && StaffAccess.valueOf(firstRole).hasAccessTo(role)
+        return try {
+            firstRole != null && StaffAccess.valueOf(firstRole).hasAccessTo(role)
+        } catch (e: IllegalArgumentException) {
+            false
+        }
     }
 }
